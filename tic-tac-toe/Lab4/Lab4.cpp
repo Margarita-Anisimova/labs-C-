@@ -9,9 +9,8 @@
 
 using namespace std;
 
-class Counter
+struct Counter
 {
-public:
     int win = 0;
     int lose = 0;
     int draw = 0;
@@ -59,30 +58,37 @@ void PrintRerult(int i, Counter count)
     cout << "win " << count.win << " lose " << count.lose<< " draw " << count.draw << endl;
 }
 
-int main()
+
+void СalculationOutcomeGame(TreeNode root)
 {
-    PlayField playfield;
-    TreeNode root(&playfield, nullptr);
     Counter total;
     for (int i = 0; i < 9; ++i)
     {
         Counter counter;
         auto nowField = root.value();
         PlayField::CellIdx cell(i / 3, i % 3);
-        if (playfield[cell] == PlayField::csEmpty)
+        if (nowField[cell] == PlayField::csEmpty)
         {
-            TreeNode newChild(&playfield.makeMove(cell), &root);
+            TreeNode newChild(&nowField.makeMove(cell), &root);
             root.addChild(newChild);
             counter = FillRoot(newChild, counter);
             total.win += counter.win;
             total.lose += counter.lose;
             total.draw += counter.draw;
             PrintRerult(i, counter);
-        }        
+        }
     }
-    cout<< "total " << "win " << total.win << " lose " << total.lose << " draw " << total.draw << endl;
+    cout << "total " << "win " << total.win << " lose " << total.lose << " draw " << total.draw << endl;
+}
+
+int main()
+{
+    PlayField playfield;
+    TreeNode root(&playfield, nullptr);
+    СalculationOutcomeGame(root);
     return 0;
 }
+
 
 
 

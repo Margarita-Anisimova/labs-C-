@@ -32,9 +32,9 @@ public:
 
 private:
 	State field[9] = { csEmpty ,csEmpty ,csEmpty ,csEmpty ,csEmpty ,csEmpty ,csEmpty ,csEmpty ,csEmpty };
-	State nextMove = csCross; // используется для хранения следующего хода, так как при выполнении makeMove мы далжны знать какой игрок делает ход
+	State nextMove = csCross; 
 	PlayField operator+(CellIdx);
-	void change_nextMove(bool);//метод изменяет значение nextMove после каждого хода
+	void change_nextMove(bool);
 };
 
 

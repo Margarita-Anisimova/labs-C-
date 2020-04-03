@@ -11,16 +11,16 @@ public:
 	TreeNode(PlayField* , TreeNode*);	
 	
 	void addChild(TreeNode);
-	bool isTerminal();
-	int childCount();
-	const PlayField& value();
+	bool isTerminal() const;
+	int childCount() const;
+	const PlayField& value() const;
 	TreeNode* operator[](int);
 
 private:
 	vector<TreeNode> children;
 	const PlayField* playField;
 	TreeNode* parent;
-	int childQty();
+	int childQty() const;
 
 
 };
