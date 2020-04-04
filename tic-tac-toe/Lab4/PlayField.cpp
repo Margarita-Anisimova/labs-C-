@@ -87,9 +87,10 @@ PlayField::GameState PlayField::checkFieldStatus() const
 
 PlayField::State PlayField::GetWinState() const
 {
-	if (field[0] != csEmpty && field[0] == field[4] && field[0] == field[8]
-		|| field[2] != csEmpty && field[2] == field[4] && field[2] == field[6])
-		return field[4];
+	if (field[0] != csEmpty && field[0] == field[4] && field[0] == field[8])
+		return field[0];
+	if(field[2] != csEmpty && field[2] == field[4] && field[2] == field[6])
+		return field[2];
 	else
 		for (int i = 0; i < 3; i++)
 		{
