@@ -58,7 +58,6 @@ void PrintRerult(int i, Counter count)
     cout << "win " << count.win << " lose " << count.lose<< " draw " << count.draw << endl;
 }
 
-
 void СalculationOutcomeGame(TreeNode root)
 {
     Counter total;
@@ -88,7 +87,6 @@ int main()
     СalculationOutcomeGame(root);
     return 0;
 }
-
 
 
 

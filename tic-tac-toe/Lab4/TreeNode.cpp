@@ -7,13 +7,13 @@ TreeNode::TreeNode(PlayField* field, TreeNode* node)
 	parent = node;
 }
 
-void TreeNode::addChild(TreeNode child)
+void TreeNode::addChild(TreeNode child) 
 {
 	assert(childQty() > childCount());
 	children.push_back(child);
 }
 
-bool TreeNode::isTerminal() const
+bool TreeNode::isTerminal() const 
 {
 	return (childQty() == 0 || (*playField).checkFieldStatus() != PlayField::fsNormal);
 }
@@ -28,7 +28,7 @@ const PlayField& TreeNode::value() const
 	return *playField;
 }
 
-TreeNode* TreeNode::operator[](int i)
+TreeNode* TreeNode::operator[](int i) 
 {
 	assert(children.size() > i);
 	return &children[i];
