@@ -9,14 +9,29 @@
 
 using namespace std;
 
-struct Counter
+struct Result
 {
-    int win = 0;
-    int lose = 0;
-    int draw = 0;
+    int win;
+    int lose;
+    int draw;
+
+    Result& operator+=(const Result& nowResult)
+    {
+        win += nowResult.win;
+        lose += nowResult.lose;
+        draw += nowResult.draw;
+        return *this;
+    }
+
+    void PrintRerult(int i)
+    {
+        cout << i / 3 << ' ' << i % 3 << endl;
+        cout << "win " << win << " lose " << lose << " draw " << draw << endl;
+    }
+
 };
 
-Counter FillRoot(TreeNode root, Counter counter)
+Result FillRoot(TreeNode root, Result result)
 {
     if (root.isTerminal())
     {
@@ -24,18 +39,18 @@ Counter FillRoot(TreeNode root, Counter counter)
         switch (field.checkFieldStatus())
         {
         case PlayField::fsCrossesWin:
-            counter.win++;
+            result.win++;
             break;
         case PlayField::fsNoughtsWin:
-            counter.lose++;
+            result.lose++;
             break;
         case PlayField::fsDraw:
-            counter.draw++;
+            result.draw++;
             break;
         default:
             break;
         }
-        return counter;
+        return result;
     }
 
     auto nowField = root.value();
@@ -46,35 +61,28 @@ Counter FillRoot(TreeNode root, Counter counter)
         {
             TreeNode newChild(&nowField.makeMove(cell), &root);
             root.addChild(newChild);
-            counter = FillRoot(newChild, counter);
+            result = FillRoot(newChild, result);
         }
     }
-    return counter;
+    return result;
 }
 
-void PrintRerult(int i, Counter count)
-{
-    cout << i / 3 << ' ' << i % 3 << endl;
-    cout << "win " << count.win << " lose " << count.lose<< " draw " << count.draw << endl;
-}
 
 void СalculationOutcomeGame(TreeNode root)
 {
-    Counter total;
+    Result total;
     for (int i = 0; i < 9; ++i)
     {
-        Counter counter;
+        Result result = { 0,0,0 };
         auto nowField = root.value();
         PlayField::CellIdx cell(i / 3, i % 3);
         if (nowField[cell] == PlayField::csEmpty)
         {
             TreeNode newChild(&nowField.makeMove(cell), &root);
             root.addChild(newChild);
-            counter = FillRoot(newChild, counter);
-            total.win += counter.win;
-            total.lose += counter.lose;
-            total.draw += counter.draw;
-            PrintRerult(i, counter);
+            result = FillRoot(newChild, result);
+            total += result;
+            result.PrintRerult(i);
         }
     }
     cout << "total " << "win " << total.win << " lose " << total.lose << " draw " << total.draw << endl;
@@ -87,7 +95,3 @@ int main()
     СalculationOutcomeGame(root);
     return 0;
 }
-
-
-
-
