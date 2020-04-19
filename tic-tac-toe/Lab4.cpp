@@ -14,19 +14,18 @@ struct Result
     int lose = 0;
     int draw=0;
 
-    Result operator+=(const Result& nowResult)
+    void operator+=(const Result& nowResult)
     {
         win += nowResult.win;
         lose += nowResult.lose;
         draw += nowResult.draw;
-        return *this;
     }
 };
 
-Result FillRoot(TreeNode& root, Result& result)
+void FillRoot(TreeNode& root)
 {
     if (root.isTerminal())
-        return result;
+        return;
     for (auto cell : root.value().getEmptyCells())
     {
         root.addChild(new TreeNode(root.value().makeMove(cell)));
