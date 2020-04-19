@@ -1,8 +1,6 @@
 #include "PlayField.h"
 #include <iostream>
-#include <vector>
 #include <cassert>
-#include <math.h>
 #include <tuple>
 
 using namespace std;
@@ -13,7 +11,7 @@ PlayField::CellIdx::CellIdx(int i)
 	y = i % size;
 }
 
-int PlayField::CellIdx::convertToInt() const
+PlayField::CellIdx::operator int() const
 {
 	return (size * x + y);
 }
@@ -30,18 +28,17 @@ vector<PlayField::CellIdx>  PlayField::getEmptyCells() const
 	return emptyCells;
 }
 
-PlayField PlayField::makeMove(CellIdx cell)
+PlayField PlayField::makeMove(CellIdx cell) const
 {
-	State st = field[cell.convertToInt()];
-	assert(st == csEmpty && checkFieldStatus() == fsNormal);
-	return (*this) + cell;
+	assert(field[cell] == csEmpty && checkFieldStatus() == fsNormal);
+	PlayField newField(*this);
+	return newField + cell;
 }
 
 PlayField PlayField::operator+(CellIdx cell)
 {
-	PlayField newField(*this);
-	newField.field[cell.convertToInt()] = get_nextMove();
-	return newField;
+	this->field[cell] = get_nextMove();
+	return *this;
 }
 
 tuple<int , int> PlayField::GetCountCrossNought() const
@@ -88,12 +85,16 @@ PlayField::GameState PlayField::checkFieldStatus() const
 {	
 	int countWin = 0;
 	State winState = csEmpty;
-	checkLine(0, size * size - 1, size + 1, countWin, winState);
-	checkLine(size - 1, size * size - size, size - 1, countWin, winState);
+	checkLine(0, size * size - 1, size + 1, winState);
+	checkLine(size - 1, size * size - size, size - 1, winState);
 	for (int i = 0; i < size; i++)
 	{
-		checkLine(i, i + size * (size - 1), size, countWin, winState);
-		checkLine(i * size, i * size + size - 1, 1, countWin, winState);
+		checkLine(i, i + size * (size - 1), size, winState);
+		if (winState != csEmpty)
+			countWin++;
+		checkLine(i * size, i * size + size - 1, 1, winState);
+		if (winState != csEmpty)
+			countWin++;
 	}
 
 	auto count = GetCountCrossNought();
@@ -115,7 +116,7 @@ PlayField::GameState PlayField::checkFieldStatus() const
 
 PlayField::State PlayField::operator[](CellIdx cell) const
 {
-	assert(size*size > cell.convertToInt());
-	return field[cell.convertToInt()];
+	assert(size * size > cell);
+	return field[cell];
 }
 

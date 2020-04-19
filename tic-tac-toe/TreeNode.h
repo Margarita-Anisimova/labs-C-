@@ -6,6 +6,7 @@ class TreeNode
 {
 public:
 	TreeNode(PlayField field) : playField(field) { }	
+	~TreeNode();
 	void addChild(TreeNode* child);
 	bool isTerminal() const;
 	int childCount() const;

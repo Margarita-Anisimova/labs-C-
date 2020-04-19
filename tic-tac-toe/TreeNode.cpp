@@ -1,8 +1,13 @@
 #include "TreeNode.h"
 #include <cassert>
-#include "PlayField.h"
 
 using namespace std;
+
+TreeNode::~TreeNode()
+{
+	for(auto child : children)
+		delete child;
+}
 
 void TreeNode::addChild(TreeNode* child) 
 {
@@ -16,7 +21,8 @@ void TreeNode::addChild(TreeNode* child)
 bool TreeNode::isTerminal() const 
 {
 	auto fieldState = playField.checkFieldStatus();
-	return (childQty() == 0 || fieldState == PlayField::fsCrossesWin || fieldState == PlayField::fsDraw || fieldState == PlayField::fsNoughtsWin);
+	return (childQty() == 0 || fieldState == PlayField::fsCrossesWin 
+		|| fieldState == PlayField::fsDraw || fieldState == PlayField::fsNoughtsWin);
 }
 
 int TreeNode::childCount() const
@@ -31,7 +37,6 @@ const PlayField& TreeNode::value() const
 
 TreeNode& TreeNode::operator[](int i) const
 {
-	assert(children.size() > i);
 	return *children[i];
 }
 

@@ -15,13 +15,13 @@ public:
 		CellIdx(int i);
 		int get_x() { return x; }
 		int get_y() { return y; }
-		int convertToInt() const;
+		operator int() const;
 	private:
 		int x = 0;
 		int y = 0;
 	};
 
-	PlayField makeMove(CellIdx cell);
+	PlayField makeMove(CellIdx cell) const;
 	std::vector<CellIdx> getEmptyCells() const;
 	GameState checkFieldStatus() const;
 	State operator[] (CellIdx cell) const;
@@ -33,6 +33,6 @@ private:
 	PlayField operator+(CellIdx cell);
 	State get_nextMove() const;
 	std::tuple<int, int>  GetCountCrossNought() const;
-	void checkLine(int start, int end, int step, int& countWin, State& winState) const;
+	void checkLine(int start, int end, int step, State& winState) const;
 };
 

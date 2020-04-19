@@ -6,7 +6,6 @@
 #include "TreeNode.h"
 #include <string>
 
-
 using namespace std;
 
 struct Result
@@ -22,15 +21,21 @@ struct Result
         draw += nowResult.draw;
         return *this;
     }
-
-    void PrintResult(int i)
-    {
-        cout << i / PlayField::getSize() << ' ' << i % PlayField::getSize() << endl;
-        cout << "win " << win << " lose " << lose << " draw " << draw << endl;
-    }
 };
 
 Result FillRoot(TreeNode& root, Result& result)
+{
+    if (root.isTerminal())
+        return result;
+    for (auto cell : root.value().getEmptyCells())
+    {
+        root.addChild(new TreeNode(root.value().makeMove(cell)));
+        FillRoot(root[root.childCount() - 1]);
+    }
+    return;
+}
+
+void СalculationOutcomeGame(TreeNode& root, Result& result)
 {
     if (root.isTerminal())
     {
@@ -49,41 +54,41 @@ Result FillRoot(TreeNode& root, Result& result)
         default:
             break;
         }
-        return result;
+        return;
     }
-
-    auto nowField = root.value();
-    for(auto cell : nowField.getEmptyCells())
-    {
-        TreeNode newChild(nowField.makeMove(cell));
-        root.addChild(&newChild);
-        result = FillRoot(newChild, result);
-    }
-    return result;
+    for (int i = 0; i < root.childCount(); i++)
+        СalculationOutcomeGame(root[i], result);
+    return;
 }
 
-void СalculationOutcomeGame(TreeNode& root)
+void PrintResult(int pos, Result result)
 {
-    Result total;
-    auto nowField = root.value();
-    vector<Result> results;
-    for (auto cell : nowField.getEmptyCells())
+    int s = PlayField::getSize();
+    for (int i = 0; i < s * s; i++)
     {
-        Result result;
-        TreeNode newChild(nowField.makeMove(cell));
-        root.addChild(&newChild);
-        FillRoot(newChild, result);
-        total += result;
-        result.PrintResult(cell.convertToInt());
-    }    
-    cout << "total " << "win " << total.win << " lose " << total.lose << " draw " << total.draw << endl;
+        if (i % 3 == 0)
+            cout << endl;
+        if (i == pos)
+            cout << "|X|";
+        else
+            cout << "| |";
+    }
+    cout << endl << "win " << result.win << " lose " << result.lose << " draw " << result.draw << endl;
 }
 
 int main()
 {
+    Result total;
     PlayField playfield;
     TreeNode root(playfield);
-    СalculationOutcomeGame(root);
-    return 0;
+    FillRoot(root);
+    for (int i = 0; i < root.childCount(); i++)
+    {
+        Result result;
+        СalculationOutcomeGame(root[i], result);
+        total += result;
+        PrintResult(i, result);
+    }
+    cout << "total " << "win " << total.win << " lose " << total.lose << " draw " << total.draw << endl;
 }
 
