@@ -99,7 +99,7 @@ int BSearchWithoutRecursion(int desired, int* array, int left, int right)
     return -1;
 }
 
-int* FullingArray(int* array, int end, int border)
+void FullingArray(int* array, int end, int border)
 {
     for (int i = 0; i < end; i++)
         array[i] = rand() % (border * 2) - border;
