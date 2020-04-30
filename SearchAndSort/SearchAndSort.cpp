@@ -1,9 +1,7 @@
 ﻿//Анисимова М.В. РИ-280001
 #include <iostream>
-#include <time.h>
-#include <vector> 
-#include <queue> 
 #include <chrono>
+#include "queue.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -19,14 +17,14 @@ constexpr int countOutputValues = 50;
 
 int Search(int* arr, int end, int desired)
 {
-    for (int i = 0; i < end;++i)
+    for (int i = 0; i < end; ++i)
         if (arr[i] == desired)
             return i;
     return -1;
 }
 
 void QuickSortWithRecursion(int* array, int start, int end)
-{    
+{
     int indx = start;
     int pivot = array[end];
     for (int i = start; i < end; i++)
@@ -44,15 +42,15 @@ void QuickSortWithRecursion(int* array, int start, int end)
 }
 
 void QuickSortWithoutRecursion(int* array, int start, int end)
-{    
-    queue<int> starts ;
-    queue<int> ends ;
+{
+    queue<int> starts;
+    queue<int> ends;
     starts.push(start);
     ends.push(end);
-    while (!starts.empty())
+    while (starts.head && ends.head)
     {
-        start = starts.front();
-        end = ends.front();
+        start = starts.head->value;
+        end = ends.head->value;
         int indx = start;
         int pivot = array[end];
         for (int i = start; i < end; i++)
@@ -77,17 +75,17 @@ void QuickSortWithoutRecursion(int* array, int start, int end)
             starts.push(indx + 1);
             ends.push(end);
         }
-    }    
+    }
 }
 
 int BSearch(int desired, int* array, int left, int right)
- {   
+{
     if (left < right)
     {
         int center = (right + left) / 2;
         if (desired <= array[center])
             return BSearch(desired, array, left, center);
-        else 
+        else
             return BSearch(desired, array, center + 1, right);
     }
     else
@@ -105,8 +103,8 @@ int BSearchWithoutRecursion(int desired, int* array, int left, int right)
         int center = (right + left) / 2;
         if (desired <= array[center])
             right = center;
-        else if(desired > array[center])
-            left = center + 1; 
+        else if (desired > array[center])
+            left = center + 1;
     }
     if (array[right] == desired)
         return right;
@@ -128,6 +126,7 @@ void PrintArray(int* array)
 
 void ComparingSpeedSearchElement()
 {
+    srand(time(NULL));
     int arr[sizeArrayForSearch];
     FullingArray(arr, sizeArrayForSearch, rangeValue1);
     auto start = steady_clock::now();
@@ -137,7 +136,7 @@ void ComparingSpeedSearchElement()
     cout << "Time Search in array " << sizeArrayForSearch << ": " << time.count() << " nanoseconds" << endl;
 
     QuickSortWithRecursion(arr, 0, sizeArrayForSearch - 1);
-    start = steady_clock::now();   
+    start = steady_clock::now();
     index = BSearch(targetValue, arr, 0, sizeArrayForSearch - 1);
     stop = steady_clock::now();
     time = duration_cast<nanoseconds>(stop - start);
@@ -147,29 +146,28 @@ void ComparingSpeedSearchElement()
 int main()
 {
     int arr[sizeArrayForSearch];
-    srand(time(NULL));
     FullingArray(arr, sizeArrayForSearch, rangeValue1);
     int index = Search(arr, sizeArrayForSearch, targetValue);
     if (index == -1)
         cout << "Element not found" << endl;
-    else 
+    else
         cout << "Search() Result: Index = " << index << endl;
 
     int arr2[sizeArrayForBSearch];
     FullingArray(arr2, sizeArrayForBSearch, rangeValue2);
     cout << "The array before sorting : ";
     PrintArray(arr2);
-    QuickSortWithRecursion(arr2, 0, sizeArrayForBSearch -1);
+    QuickSortWithRecursion(arr2, 0, sizeArrayForBSearch - 1);
     cout << "Array after sorting with recursion : ";
-    PrintArray(arr2);    
+    PrintArray(arr2);
 
     FullingArray(arr2, sizeArrayForBSearch, rangeValue2);
-    cout << "The array before sorting : ";    
+    cout << "The array before sorting : ";
     PrintArray(arr2);
     QuickSortWithoutRecursion(arr2, 0, sizeArrayForBSearch - 1);
     cout << "Array after sorting without recursion : ";
     PrintArray(arr2);
-    
+
     int result = BSearch(targetValue, arr2, 0, sizeArrayForBSearch - 1);
     if (result == -1)
         cout << "Element not found" << endl;
