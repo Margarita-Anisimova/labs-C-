@@ -8,6 +8,15 @@
 using namespace std;
 using namespace std::chrono;
 
+constexpr int sizeArrayForSearch = 10000;
+constexpr int rangeValue1 = 1000;
+
+constexpr int sizeArrayForBSearch = 100;
+constexpr int rangeValue2 = 10;
+
+constexpr int targetValue = 7;
+constexpr int countOutputValues = 50;
+
 int Search(int* arr, int end, int desired)
 {
     for (int i = 0; i < end;++i)
@@ -16,8 +25,8 @@ int Search(int* arr, int end, int desired)
     return -1;
 }
 
-int DistributionElements(int* array, int start, int end)
-{
+void QuickSortWithRecursion(int* array, int start, int end)
+{    
     int indx = start;
     int pivot = array[end];
     for (int i = start; i < end; i++)
@@ -30,12 +39,6 @@ int DistributionElements(int* array, int start, int end)
         }
     array[end] = array[indx];
     array[indx] = pivot;
-    return indx;
-}
-
-void QuickSortWithRecursion(int* array, int start, int end)
-{    
-    int indx = DistributionElements(array, start, end);    
     if (indx > start) QuickSortWithRecursion(array, start, indx - 1);
     if (indx < end) QuickSortWithRecursion(array, indx + 1, end);
 }
@@ -50,7 +53,18 @@ void QuickSortWithoutRecursion(int* array, int start, int end)
     {
         start = starts.front();
         end = ends.front();
-        int indx = DistributionElements(array, start, end);
+        int indx = start;
+        int pivot = array[end];
+        for (int i = start; i < end; i++)
+            if (array[i] <= pivot)
+            {
+                int t = array[i];
+                array[i] = array[indx];
+                array[indx] = t;
+                indx++;
+            }
+        array[end] = array[indx];
+        array[indx] = pivot;
         starts.pop();
         ends.pop();
         if (indx > start)
@@ -103,69 +117,68 @@ void FullingArray(int* array, int end, int border)
 {
     for (int i = 0; i < end; i++)
         array[i] = rand() % (border * 2) - border;
-    return array;
 }
 
 void PrintArray(int* array)
 {
-    for (int i = 0; i < 50; i++)
+    for (int i = 0; i < countOutputValues; i++)
         cout << array[i] << " ";
     cout << endl;
 }
 
 void ComparingSpeedSearchElement()
 {
-    int arr[10000];
-    int s = sizeof(arr)/sizeof(&arr);
-    FullingArray(arr, s, 1000);
+    int arr[sizeArrayForSearch];
+    int s = sizeof(arr)/sizeof(*arr);
+    FullingArray(arr, s, rangeValue1);
     auto start = steady_clock::now();
-    int index = Search(arr, s, 344);
+    int index = Search(arr, s, targetValue);
     auto stop = steady_clock::now();
     auto time = duration_cast<nanoseconds>(stop - start);
-    cout << "Time Search: " << time.count() << " nanoseconds" << endl;
+    cout << "Time Search in array " << sizeArrayForSearch << ": " << time.count() << " nanoseconds" << endl;
 
     QuickSortWithRecursion(arr, 0, s - 1);
     start = steady_clock::now();   
-    index = BSearch(345, arr, 0, s - 1);
+    index = BSearch(targetValue, arr, 0, s - 1);
     stop = steady_clock::now();
     time = duration_cast<nanoseconds>(stop - start);
-    cout << "Time BSearch: " << time.count() << " nanoseconds" << endl;
+    cout << "Time BSearch in array " << sizeArrayForSearch << ": " << time.count() << " nanoseconds" << endl;
 }
 
 int main()
 {
-    int arr[10000];
-    int s = sizeof(arr) / sizeof(&arr);
+    int arr[sizeArrayForSearch];
+    int s = sizeof(arr) / sizeof(*arr);
     srand(time(NULL));
-    FullingArray(arr, s, 1000);
-    int index = Search(arr, s, 376);
+    FullingArray(arr, s, rangeValue1);
+    int index = Search(arr, s, targetValue);
     if (index == -1)
         cout << "Element not found" << endl;
     else 
         cout << "Search() Result: Index = " << index << endl;
 
-    int arr2[100];
-    s = sizeof(arr2) / sizeof(&arr2);
-    FullingArray(arr2, s, 10);
+    int arr2[sizeArrayForBSearch];
+    s = sizeof(arr2) / sizeof(*arr2);
+    FullingArray(arr2, s, rangeValue2);
     cout << "The array before sorting : ";
     PrintArray(arr2);
     QuickSortWithRecursion(arr2, 0, s-1);
     cout << "Array after sorting with recursion : ";
     PrintArray(arr2);    
 
-    FullingArray(arr2, s, 10);
+    FullingArray(arr2, s, rangeValue2);
     cout << "The array before sorting : ";    
     PrintArray(arr2);
     QuickSortWithoutRecursion(arr2, 0, s - 1);
     cout << "Array after sorting without recursion : ";
     PrintArray(arr2);
     
-    int result = BSearch(7, arr2, 0, s - 1);
+    int result = BSearch(targetValue, arr2, 0, s - 1);
     if (result == -1)
         cout << "Element not found" << endl;
     else
         cout << "BSearch() Result: Index = " << result << endl;
-    result = BSearchWithoutRecursion(7, arr2, 0, s - 1);    
+    result = BSearchWithoutRecursion(targetValue, arr2, 0, s - 1);
     if (result == -1)
         cout << "Element not found" << endl;
     else
