@@ -129,17 +129,16 @@ void PrintArray(int* array)
 void ComparingSpeedSearchElement()
 {
     int arr[sizeArrayForSearch];
-    int s = sizeof(arr)/sizeof(*arr);
-    FullingArray(arr, s, rangeValue1);
+    FullingArray(arr, sizeArrayForSearch, rangeValue1);
     auto start = steady_clock::now();
-    int index = Search(arr, s, targetValue);
+    int index = Search(arr, sizeArrayForSearch, targetValue);
     auto stop = steady_clock::now();
     auto time = duration_cast<nanoseconds>(stop - start);
     cout << "Time Search in array " << sizeArrayForSearch << ": " << time.count() << " nanoseconds" << endl;
 
-    QuickSortWithRecursion(arr, 0, s - 1);
+    QuickSortWithRecursion(arr, 0, sizeArrayForSearch - 1);
     start = steady_clock::now();   
-    index = BSearch(targetValue, arr, 0, s - 1);
+    index = BSearch(targetValue, arr, 0, sizeArrayForSearch - 1);
     stop = steady_clock::now();
     time = duration_cast<nanoseconds>(stop - start);
     cout << "Time BSearch in array " << sizeArrayForSearch << ": " << time.count() << " nanoseconds" << endl;
@@ -148,37 +147,35 @@ void ComparingSpeedSearchElement()
 int main()
 {
     int arr[sizeArrayForSearch];
-    int s = sizeof(arr) / sizeof(*arr);
     srand(time(NULL));
-    FullingArray(arr, s, rangeValue1);
-    int index = Search(arr, s, targetValue);
+    FullingArray(arr, sizeArrayForSearch, rangeValue1);
+    int index = Search(arr, sizeArrayForSearch, targetValue);
     if (index == -1)
         cout << "Element not found" << endl;
     else 
         cout << "Search() Result: Index = " << index << endl;
 
     int arr2[sizeArrayForBSearch];
-    s = sizeof(arr2) / sizeof(*arr2);
-    FullingArray(arr2, s, rangeValue2);
+    FullingArray(arr2, sizeArrayForBSearch, rangeValue2);
     cout << "The array before sorting : ";
     PrintArray(arr2);
-    QuickSortWithRecursion(arr2, 0, s-1);
+    QuickSortWithRecursion(arr2, 0, sizeArrayForBSearch -1);
     cout << "Array after sorting with recursion : ";
     PrintArray(arr2);    
 
-    FullingArray(arr2, s, rangeValue2);
+    FullingArray(arr2, sizeArrayForBSearch, rangeValue2);
     cout << "The array before sorting : ";    
     PrintArray(arr2);
-    QuickSortWithoutRecursion(arr2, 0, s - 1);
+    QuickSortWithoutRecursion(arr2, 0, sizeArrayForBSearch - 1);
     cout << "Array after sorting without recursion : ";
     PrintArray(arr2);
     
-    int result = BSearch(targetValue, arr2, 0, s - 1);
+    int result = BSearch(targetValue, arr2, 0, sizeArrayForBSearch - 1);
     if (result == -1)
         cout << "Element not found" << endl;
     else
         cout << "BSearch() Result: Index = " << result << endl;
-    result = BSearchWithoutRecursion(targetValue, arr2, 0, s - 1);
+    result = BSearchWithoutRecursion(targetValue, arr2, 0, sizeArrayForBSearch - 1);
     if (result == -1)
         cout << "Element not found" << endl;
     else
