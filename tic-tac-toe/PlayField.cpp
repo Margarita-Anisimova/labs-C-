@@ -126,7 +126,7 @@ PlayField::GameState PlayField::checkFieldStatus() const
 {
 	int countWin = 0;
 	int difference = get<0>(count) - get<1>(count);
-	if (!(difference == 0 || difference == 1))
+	if (difference != 0 && difference != 1)
 		return fsInvalid;
 	bool isInvalide = false;
 	auto winState = getWinnerState(isInvalide);
