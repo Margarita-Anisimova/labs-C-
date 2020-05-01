@@ -1,18 +1,17 @@
 #pragma once
-template<typename T>
-class queue
+class queueInt
 {
 public:
     class queueItem
     {
     public:
-        queueItem(T val) : value(val), next(nullptr) { }
-        T value;
+        queueItem(int val) : value(val), next(nullptr) { }
+        int value;
         queueItem* next;
     };
 
-    queue() : head(nullptr), tail(nullptr) { }
-    void push(T val)
+    queueInt() : head(nullptr), tail(nullptr) { }
+    void push(int val)
     {
         if (!head)
             head = tail = new queueItem(val);

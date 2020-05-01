@@ -43,8 +43,8 @@ void QuickSortWithRecursion(int* array, int start, int end)
 
 void QuickSortWithoutRecursion(int* array, int start, int end)
 {
-    queue<int> starts;
-    queue<int> ends;
+    queueInt starts;
+    queueInt ends;
     starts.push(start);
     ends.push(end);
     while (starts.head && ends.head)
