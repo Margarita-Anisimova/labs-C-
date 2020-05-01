@@ -10,9 +10,9 @@ using namespace std;
 
 struct Result
 {
-    int win=0;
+    int win = 0;
     int lose = 0;
-    int draw=0;
+    int draw = 0;
 
     void operator+=(const Result& nowResult)
     {
@@ -90,4 +90,3 @@ int main()
     }
     cout << "total " << "win " << total.win << " lose " << total.lose << " draw " << total.draw << endl;
 }
-

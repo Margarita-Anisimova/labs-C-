@@ -1,5 +1,4 @@
 #pragma once
-#include <iostream>
 #include <vector>
 
 class PlayField
@@ -33,6 +32,6 @@ private:
 	PlayField operator+(CellIdx cell);
 	State get_nextMove() const;
 	std::tuple<int, int>  GetCountCrossNought() const;
-	void checkLine(int start, int end, int step, State& winState) const;
+	State getWinnerState(bool& isInvalid) const;
 };
 

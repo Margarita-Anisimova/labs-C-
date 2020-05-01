@@ -22,7 +22,7 @@ bool TreeNode::isTerminal() const
 {
 	auto fieldState = playField.checkFieldStatus();
 	return (childQty() == 0 || fieldState == PlayField::fsCrossesWin 
-		|| fieldState == PlayField::fsDraw || fieldState == PlayField::fsNoughtsWin);
+		|| fieldState == PlayField::fsNoughtsWin);
 }
 
 int TreeNode::childCount() const

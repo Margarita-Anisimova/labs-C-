@@ -1,5 +1,4 @@
 #include "PlayField.h"
-#include <iostream>
 #include <cassert>
 #include <tuple>
 
@@ -54,8 +53,6 @@ tuple<int, int> PlayField::GetCountCrossNought() const
 		case csNought:
 			countNought++;
 			break;
-		default:
-			break;
 		}
 	return make_tuple(countCross, countNought);
 }
@@ -63,41 +60,77 @@ tuple<int, int> PlayField::GetCountCrossNought() const
 PlayField::State PlayField::get_nextMove() const
 {
 	auto count = GetCountCrossNought();
-	return (get<0>(count) > get<1>(count)) ? csNought : csCross;
+	int difference = get<0>(count) - get<1>(count);
+	assert(difference == 0 || difference == 1);
+	return  difference == 1 ? csNought : csCross;
 }
 
-void PlayField::checkLine(int start, int end, int step, State& winState) const
+PlayField::State PlayField::getWinnerState(bool& isInvalid) const
 {
-	for (int i = start; i <= end; i = i + step)
+	State winState = csEmpty;
+	CellIdx startLine(0, 0);
+	for (int i = 1; i < size; ++i)
 	{
-		if (i == end)
-		{
-			winState = field[i];
+		if (field[startLine] == csEmpty || field[startLine] != field[*new CellIdx(i, i)])
 			break;
-		}
-		if (field[i] == csEmpty || field[i] != field[i + step])
-			break;
+		if (i == size - 1)
+			winState = field[startLine];
 	}
+	if (winState == csEmpty)
+	{
+		startLine = { 0, size - 1 };
+		for (int i = 1; i < size; ++i)
+		{
+			if (field[startLine] == csEmpty || field[startLine] != field[*new CellIdx(i, size - 1 - i)])
+				break;
+			if (i == size - 1)
+				winState = field[startLine];
+		}
+		if (winState == csEmpty)
+		{
+			for (int i = 0; i < size; ++i)
+			{
+				startLine = { i, 0 };
+				for (int j = 1; j < size; ++j)
+				{
+					if (field[startLine] == csEmpty || field[startLine] != field[*new CellIdx(i, j)])
+						break;
+					if (j == size - 1)
+						if (winState != csEmpty)
+							isInvalid = true;
+						else
+							winState = field[startLine];
+				}
+			}
+			if (winState == csEmpty)
+				for (int i = 0; i < size; ++i)
+				{
+					startLine = { 0, i };
+					for (int j = 1; j < size; ++j)
+					{
+						if (field[startLine] == csEmpty || field[startLine] != field[*new CellIdx(j, i)])
+							break;
+						if (j == size - 1)
+							if (winState != csEmpty)
+								isInvalid = true;
+							else
+								winState = field[startLine];
+					}
+				}
+		}
+	}
+	return winState;
 }
 
 PlayField::GameState PlayField::checkFieldStatus() const
 {
 	int countWin = 0;
-	State winState = csEmpty;
-	checkLine(0, size * size - 1, size + 1, winState);
-	checkLine(size - 1, size * size - size, size - 1, winState);
-	for (int i = 0; i < size; i++)
-	{
-		checkLine(i, i + size * (size - 1), size, winState);
-		if (winState != csEmpty)
-			countWin++;
-		checkLine(i * size, i * size + size - 1, 1, winState);
-		if (winState != csEmpty)
-			countWin++;
-	}
-
-	auto count = GetCountCrossNought();
-	if (abs(get<0>(count) - get<1>(count)) > 1 && countWin > 1)
+	int difference = get<0>(count) - get<1>(count);
+	if (!(difference == 0 || difference == 1))
+		return fsInvalid;
+	bool isInvalide = false;
+	auto winState = getWinnerState(isInvalide);
+	if (isInvalide)
 		return fsInvalid;
 	switch (winState)
 	{
