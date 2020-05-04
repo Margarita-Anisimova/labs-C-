@@ -31,7 +31,7 @@ PlayField PlayField::operator+(CellIdx cell) const
 {
 	PlayField newField(*this);
 	newField.field[cell] = get_nextMove();
-	return *this;
+	return newField;
 }
 
 int PlayField::GetDifferenceCrossNought() const
