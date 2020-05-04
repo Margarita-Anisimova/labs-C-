@@ -11,7 +11,6 @@ public:
 	{
 	public:
 		CellIdx(int i, int j) : x(i), y(j) { }
-		CellIdx(int i);
 		int get_x() { return x; }
 		int get_y() { return y; }
 		operator int() const;
@@ -29,9 +28,10 @@ public:
 private:
 	static constexpr int size = 3;
 	State field[size * size] = { csEmpty };
-	PlayField operator+(CellIdx cell);
+	PlayField operator+(CellIdx cell) const;
 	State get_nextMove() const;
-	std::tuple<int, int>  GetCountCrossNought() const;
-	State getWinnerState(bool& isInvalid) const;
+	int GetDifferenceCrossNought() const;
+	State checkDiagonals(bool isMain) const;
+	GameState checkLines(bool isVerticul) const;
 };
 

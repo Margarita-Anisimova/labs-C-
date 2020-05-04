@@ -21,7 +21,7 @@ void TreeNode::addChild(TreeNode* child)
 bool TreeNode::isTerminal() const 
 {
 	auto fieldState = playField.checkFieldStatus();
-	return (childQty() == 0 || fieldState == PlayField::fsCrossesWin 
+	return (fieldState == PlayField::fsDraw || fieldState == PlayField::fsCrossesWin
 		|| fieldState == PlayField::fsNoughtsWin);
 }
 
