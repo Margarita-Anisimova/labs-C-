@@ -23,12 +23,12 @@ vector<PlayField::CellIdx>  PlayField::getEmptyCells() const
 
 PlayField PlayField::makeMove(CellIdx cell) const
 {
-	assert(field[cell] == csEmpty && checkFieldStatus() == fsNormal);
 	return *this + cell;
 }
 
 PlayField PlayField::operator+(CellIdx cell) const
 {
+	assert(field[cell] == csEmpty && checkFieldStatus() == fsNormal);
 	PlayField newField(*this);
 	newField.field[cell] = get_nextMove();
 	return newField;
@@ -63,22 +63,22 @@ PlayField::State PlayField::checkDiagonals(bool isMain) const
 	int start = isMain ? 0 : size - 1;
 	for (int i = 1; i < size; i++)
 	{
-		CellIdx cell = isMain ? *new CellIdx(i, i) : *new CellIdx(i, start - i);
+		CellIdx cell = isMain ? CellIdx(i, i) : CellIdx(i, start - i);
 		if (field[cell] == csEmpty || field[start] != field[cell])
 			return csEmpty;
 	}
 	return field[start];
 }
 
-PlayField::GameState PlayField::checkLines(bool isVerticul) const
+PlayField::GameState PlayField::checkLines(bool isVertical) const
 {
 	State winState = csEmpty;
 	for (int i = 0; i < size; i++)
 	{
-		CellIdx start = isVerticul ? *new CellIdx(0, i) : *new CellIdx(i, 0);
+		CellIdx start = isVertical ? CellIdx(0, i) : CellIdx(i, 0);
 		for (int j = 1; j < size; j++)
 		{
-			CellIdx cell = isVerticul ? *new CellIdx(j, i) : *new CellIdx(i, j);
+			CellIdx cell = isVertical ? CellIdx(j, i) : CellIdx(i, j);
 			if (field[cell] == csEmpty || field[cell] != field[start])
 				break;
 			if (j == size - 1)
