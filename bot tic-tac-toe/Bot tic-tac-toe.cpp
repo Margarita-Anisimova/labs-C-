@@ -2,8 +2,6 @@
 // Анисимова М.В. РИ-280001
 //#include "stdafx.h"
 #include <iostream>
-#include "PlayField.h"
-#include "TreeNode.h"
 #include "XOPlayer.h"
 #include "Score.h"
 #include <string>
@@ -30,17 +28,25 @@ Score СalculationOutcomeGame(TreeNode& root)
         switch (field.checkFieldStatus())
         {
         case PlayField::fsCrossesWin:
-            return Score(1,0,0);
+        {
+            root.score = Score(1, 0, 0);
+            return root.score;
+        }
         case PlayField::fsNoughtsWin:
-            return Score(0, 1, 0);
+        {
+            root.score = Score(0, 1, 0);
+            return root.score;
+        }
         case PlayField::fsDraw:
-            return Score(0, 0, 1);
+        {
+            root.score = Score(0, 0, 1);
+            return root.score;
+        }
         }
     }
     for (int i = 0; i < root.childCount(); i++)
-    {
-        root.score += СalculationOutcomeGame(root[i]);       
-    }
+        root.score += СalculationOutcomeGame(root[i]);
+
     return root.score;
 }
 
@@ -77,7 +83,7 @@ int main()
     std::cout << "Select player (0 - Xs, 1 - Os)" << std::endl;
     int sel_player;
     cin >> sel_player;
-    XOPlayer player(&root, (sel_player != 0 ? PlayField::csCross : PlayField::csNought));
+    XOPlayer player(root, (sel_player != 0 ? PlayField::csCross : PlayField::csNought));
     if (player.selectPlayer() == PlayField::csCross)
         player.makeMove();
     PrintField(player.currentState());
@@ -92,9 +98,9 @@ int main()
             player.makeMove(PlayField::CellIdx(x - 1, y - 1));
             player.makeMove();
         }
-        catch (int i)
+        catch (const exception& err)
         {
-            cout << "this cell is already occupied" << endl;
+            cout << err.what() << endl;
         }
         PrintField(player.currentState());
     }

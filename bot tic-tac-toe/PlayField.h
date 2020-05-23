@@ -11,8 +11,8 @@ public:
 	{
 	public:
 		CellIdx(int i, int j) : x(i), y(j) { }
-		int get_x() { return x; }
-		int get_y() { return y; }
+		int get_x() const { return x; }
+		int get_y() const { return y; }
 		operator int() const;
 	private:
 		int x = 0;
