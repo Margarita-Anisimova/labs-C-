@@ -6,16 +6,17 @@ class Score
 public:
 	Score(int x, int o, int d) : crossesWin(x), noughtsWin(o), draw(d) { }
 
-	void operator+=(Score nowResult)
+	void operator+=(const Score& nowResult)
 	{
 		crossesWin = nowResult.crossesWin + crossesWin;
 		noughtsWin = nowResult.noughtsWin + noughtsWin;
 		draw = nowResult.draw + draw;
 	}
 
-	int getShare(PlayField::State winner) const
+	double getShare(PlayField::State winner) const
 	{
-		return (winner == PlayField::csCross) ? crossesWin + draw : noughtsWin + draw;
+		double sum = crossesWin + noughtsWin + draw;
+		return (winner == PlayField::csCross) ? (crossesWin + draw) / sum : (noughtsWin + draw) / sum;
 	}
 
 private:
